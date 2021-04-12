@@ -11,7 +11,7 @@
 #8.Research and Implement separate popup screens
 #9.Figure out time functions in python
 #10.Possibly run to Lowe's if not already done
-#11.
+#11.Assemble dxf file for lasercut (refer to makercase)
 #12.
 
 #TODO THURSDAY
