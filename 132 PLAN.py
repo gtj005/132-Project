@@ -23,10 +23,9 @@
 #6.
 #7.
 #8.
-#9.
-#10.
-#11.
-#12.
+
+#Tuesday and Thursday of next week are continuations/completions of current steps and
+#moving on to polishes
 
 #TODO
 #Build enclosure
