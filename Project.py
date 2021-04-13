@@ -1,7 +1,11 @@
 from tkinter import *
 
+#create class for an enemy
 class Enemy():
-    pass
+    def __init__(self,name,HP,atkVal):
+        self.name = name
+        self.HP = HP
+        self.atkVal = atkVal
 
 class Item():
     def __init__(self, name, atk):
@@ -74,7 +78,7 @@ class Game(Frame):
 
 
 window = Tk()
-window.title("Avalache's Fighters of the forum")
+window.title("Avalanche's Fighters of the Forum")
 
 g = Game(window)
 
