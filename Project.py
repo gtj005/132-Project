@@ -42,29 +42,29 @@ class Area():
 class Game(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
+        Game.inventory = []
 
     def createArea(self):
-        #create areas 1-20
-        a1 = Area("test", "pics/test.gif")
-        a2 = Area("Area 2", "")
-        a3 = Area("Area 3", "")
-        a4 = Area("Area 4", "")
-        a5 = Area("Area 5", "")
-        a6 = Area("Area 6", "")
-        a7 = Area("Area 7", "")
-        a8 = Area("Area 8", "")
-        a9 = Area("Area 9", "")
-        a10 = Area("Area 10", "")
-        a11 = Area("Area 11", "")
-        a12 = Area("Area 12", "")
-        a13 = Area("Area 13", "")
-        a14 = Area("Area 14", "")
-        a15 = Area("Area 15", "")
-        a16 = Area("Area 16", "")
-        a17 = Area("Area 17", "")
-        a18 = Area("Area 18", "")
-        a19 = Area("Area 19", "")
-        a20 = Area("Area 20", "")
+        a1 = Area("Area 1", "pics/Game1Room1.gif")
+        a2 = Area("Area 2", "pics/Game1Room2.gif")
+        a3 = Area("Area 3", "pics/Game1Room3.gif")
+        a4 = Area("Area 4", "pics/Game1Room4.gif")
+        a5 = Area("Area 5", "pics/Game1Room5.gif")
+        a6 = Area("Area 6", "pics/Game1Room6.gif")
+        a7 = Area("Area 7", "pics/Game1Room7.gif")
+        a8 = Area("Area 8", "pics/Game1Room8.gif")
+        a9 = Area("Area 9", "pics/Game1Room9.gif")
+        a10 = Area("Area 10", "pics/Game1Room10.gif")
+        a11 = Area("Area 11", "pics/Game1Room11.gif")
+        a12 = Area("Area 12", "pics/Game1Room12.gif")
+        a13 = Area("Area 13", "pics/Game1Room13.gif")
+        a14 = Area("Area 14", "pics/Game1Room14.gif")
+        a15 = Area("Area 15", "pics/Game1Room15.gif")
+        a16 = Area("Area 16", "pics/Game1Room16.gif")
+        a17 = Area("Area 17", "pics/Game1Room17.gif")
+        a18 = Area("Area 18", "pics/Game1Room18.gif")
+        a19 = Area("Area 19", "pics/Game1Room19.gif")
+        a20 = Area("Area 20", "pics/Game1Room20.gif")
         
         #a1 neighbors
         a1.addNeighbor("east", a2)
@@ -183,13 +183,17 @@ class Game(Frame):
         a20.addNeighbor("west", a19)
         #a20 items
         #a20 enemies
-       
-   
+        
         Game.currentArea = a1
 
     def setupGUI(self):
         self.pack(fill = BOTH, expand = 1)
 
+        #input for now
+        Game.player_input = Entry(self, bg = "white")
+        Game.player_input.bind("<Return>", self.process)
+        Game.player_input.pack(side = BOTTOM, fill = X)
+        Game.player_input.focus()
 
 
         img = None
@@ -197,18 +201,67 @@ class Game(Frame):
         Game.image.pack(side = LEFT, fill = Y)
         Game.image.pack_propagate(False)
 
+        #text for now
+        text_frame = Frame(self, width = int(WIDTH/2))
+        Game.text = Text(text_frame, bg = "lightgrey", state = DISABLED)
+        Game.text.pack(fill = Y, expand = 1)
+        text_frame.pack(side = RIGHT, fill = Y)
+        text_frame.pack_propagate(False)
+
     def setAreaImage(self):
         Game.img = PhotoImage(file = Game.currentArea.image)
         Game.image.config(image = Game.img)
         Game.image.image = Game.img
 
+    def setStatus(self, status):
+        Game.text.config(state = NORMAL)
+        Game.text.delete("1.0", END)
 
+        if(Game.currentArea == None):
+            Game.text.insert(END, "You are dead. You may quit \n")
+        else:
+            Game.text.insert(END, str(Game.currentArea)+\
+                             "\nYou are carrying: " + str(Game.inventory)+
+                             "\n\n" + status)
+            Game.text.config(state = DISABLED)
 
     def play(self):
         self.createArea()
         self.setupGUI()
         self.setAreaImage()
-        
+
+    def process(self, event):
+        action = Game.player_input.get()
+
+        if(Game.currentArea == None):
+            Game.player_input.delete(0, END)
+            return
+        words = action.split()
+        verb = words[0]
+        noun = words[1]
+
+        if(verb == "advance"):
+            response = "cannot advance there (perhaps there is no area to go to)."
+
+            if(noun in Game.currentArea.neighbors):
+                Game.currentArea = Game.currentArea.neighbors[noun]
+                response = "You move to the area to the {}".format(noun)
+
+        elif(verb == "loot"):
+            response = "connot loot an item, for there is none"
+            if(len(Game.currentArea.items) > 0):
+                Game.inventory.append(Game.currentArea.items[0])
+                response = "{} item was taken.".format(Game.currentArea.items[0])
+                Game.currentArea.items.remove[0]
+
+        elif(verb == "attack"):
+            attack()
+
+
+        self.setStatus(response)
+        self.setAreaImage()
+        Game.player_input.delete(0, END)
+            
 
 
 
@@ -240,7 +293,7 @@ class Game(Frame):
 
 
 
-HEIGHT = 800
+HEIGHT = 600
 WIDTH = 800
 
 window = Tk()
