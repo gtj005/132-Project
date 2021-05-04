@@ -78,6 +78,7 @@ class Game(Frame):
         #a2 neighbors
         a2.addNeighbor("east", a3)
         a2.addNeighbor("north", a11)
+        a2.addNeighbor("west", a1)
         #a2 items
         #a2 enemies
         
