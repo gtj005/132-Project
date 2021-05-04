@@ -69,7 +69,7 @@ class Game(Frame):
         #a1 neighbors
         a1.addNeighbor("east", a2)
         #a1 items
-        a1.addItem(Item("sword", 23))
+        a1.addItem(Item("woodenDagger", 5))
         #a1 enemies
         a1.addEnemy(Enemy("Jared", 3, 3))
         
@@ -77,52 +77,64 @@ class Game(Frame):
         a2.addNeighbor("east", a3)
         a2.addNeighbor("north", a11)
         #a2 items
+        a2.addItem(Item("strengthPotion", 5))
         #a2 enemies
         
         #a3 neighbors
         a3.addNeighbor("west", a2)
         a3.addNeighbor("east", a4)
         #a3 items
+        a3.addItem(Item("steelDagger", 7))
         #a3 enemies
+        a3.addEnemy(Enemy("goblin", 20, 4))
         
         #a4 neighbors
         a4.addNeighbor("west", a3)
         a4.addNeighbor("north", a5)
         #a4 items
+        a4.addItem(Item("strengthPotion", 5))
         #a4 enemies
         
         #a5 neighbors
         a5.addNeighbor("west", a6)
         a5.addNeighbor("east", a8)
         #a5 items
+        a5.addItem(Item("enhancedDagger", 9))
         #a5 enemies
+        a5.addEnemy(Enemy("troll", 30, 7))
         
         #a6 neighbors
         a6.addNeighbor("east", a5)
         a6.addNeighbor("south", a7)
         #a6 items
+        a6.addItem(Item("shortSword", 12))
         #a6 enemies
         
         #a7 neighbors
         a7.addNeighbor("north", a6)
         #a7 items
+        a7.addItem(Item("strengthPotion", 5))
         #a7 enemies
         
         #a8 neighbors
         a8.addNeighbor("west", a5)
         a8.addNeighbor("south", a9)
         #a8 items
+        a8.addItem(Item("strengthPotion", 5))
         #a8 enemies
+        a8.addEnemy(Enemy("giantTroll", 40, 10))
         
         #a9 neighbors
         a9.addNeighbor("north", a8)
         a9.addNeighbor("south", a10)
         #a9 items
+        a9.addItem(Item("enhancedShortSword", 15))
         #a9 enemies
         
         #a10 neighbors
         a10.addNeighbor("north", a9)
         #a10 items
+        a10.addItem(Item("strengthPotion", 10))
         #a10 enemies
         
         #a11 neighbors
@@ -130,59 +142,75 @@ class Game(Frame):
         a11.addNeighbor("east", a12)
         a11.addNeighbor("north", a18)
         #a11 items
+        a11.addItem(Item("strengthPotion", 10))
         #a11 enemies
+        a11.addEnemy(Enemy("griffin", 50, 20))
         
         #a12 neighbors
         a12.addNeighbor("west", a11)
         a12.addNeighbor("east", a13)
         #a12 items
+        a12.addItem(Item("strengthPotion", 10))
         #a12 enemies
         
         #a13 neighbors
         a13.addNeighbor("west", a12)
         a13.addNeighbor("north", a14)
         #a13 items
+        a13.addItem(Item("strengthPotion", 10))
         #a13 enemies
         
         #a14 neighbors
         a14.addNeighbor("south", a13)
         a14.addNeighbor("east", a15)
         #a14 items
+        a14.addItem(Item("longSword", 17))
         #a14 enemies
+        a14.addEnemy(Enemy("minotaur", 60, 30))
         
         #a15 neighbors
         a15.addNeighbor("west", a14)
         a15.addNeighbor("south", a16)
         #a15 items
+        a15.addItem(Item("strengthPotion", 10))
         #a15 enemies
         
         #a16 neighbors
         a16.addNeighbor("north", a15)
         a16.addNeighbor("east", a17)
         #a16 items
+        a16.addItem(Item("strengthPotion", 10))
         #a16 enemies
         
         #a17 neighbors
         a17.addNeighbor("west", a16)
         #a17 items
+        a17.addItem(Item("enhancedLongSword", 22))
         #a17 enemies
+        a17.addEnemy(Enemy("hydra", 70, 40))
         
         #a18 neighbors
         a18.addNeighbor("south", a11)
         a18.addNeighbor("east", a19)
         #a18 items
+        a18.addItem(Item("strengthPotion", 15))
         #a18 enemies
+        a18.addEnemy(Enemy("dragon", 100, 60))
         
         #a19 neighbors
         a19.addNeighbor("west", a18)
         a19.addNeighbor("east", a20)
         #a19 items
+        a19.addItem(Item("lightningBow", 60))
         #a19 enemies
+        a19.addEnemy(Enemy("wraith", 200, 80))
         
         #a20 neighbors
         a20.addNeighbor("west", a19)
         #a20 items
+        a20.addItem(Item("FountainOfYouth", 300))
         #a20 enemies
+        a20.addEnemy(Enemy("Thanos", 500, 100))
         
         Game.currentArea = a1
 
