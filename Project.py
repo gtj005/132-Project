@@ -37,6 +37,16 @@ class Area():
 
     def delEnemy(self, enemy):
         self.enemies.remove(enemy)
+        
+    def Attack(self):    
+        while(p1.HP>0 and e1.HP>0):
+        p1.HP = p1.HP-e1.atkVal
+        e1.HP = e1.HP-p1.atkVal
+        print("Current HP: {}".format(p1.HP))
+        print("{}'s current HP: {}".format(e1.name,e1.HP))
+        print("")
+        sleep(1)
+
     
 
 class Game(Frame):
