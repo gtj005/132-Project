@@ -38,7 +38,7 @@ class Area():
     def delEnemy(self, enemy):
         self.enemies.remove(enemy)
         
-    def Attack(self):    
+    def attack(self):    
         while(p1.HP>0 and e1.HP>0):
         p1.HP = p1.HP-e1.atkVal
         e1.HP = e1.HP-p1.atkVal
