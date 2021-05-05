@@ -37,17 +37,7 @@ class Area():
 
     def delEnemy(self, enemy):
         self.enemies.remove(enemy)
-        
-    def attack(self, enemy):    
-        while(p1.HP>0 and e1.HP>0):
-            p1.HP = p1.HP-e1.atkVal
-            e1.HP = e1.HP-p1.atkVal
-            print("Current HP: {}".format(p1.HP))
-            print("{}'s current HP: {}".format(e1.name,e1.HP))
-            print("")
-            sleep(1)
-
-    
+      
 
 class Game(Frame):
     def __init__(self, parent):
@@ -293,7 +283,13 @@ class Game(Frame):
                 Game.currentArea.items.remove[0]
 
         elif(verb == "attack"):
-            attack()
+             while(self.HP>0 and Game.currentArea.Enemy.HP>0):
+                self.HP -= Game.currentArea.Enemy.atkVal
+                Game.currentArea.Enemy.HP -= self.atkVal
+                print("Current HP: {}".format(self.HP))
+                print("{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
+                print("")
+                sleep(1)
 
 
         self.setStatus(response)
