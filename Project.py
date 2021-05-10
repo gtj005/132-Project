@@ -1,15 +1,23 @@
 from tkinter import *
+from PIL import Image, ImageTk
+from time import sleep
 
 class Enemy():
     def __init__(self,name,HP,atkVal):
         self.name = name
         self.HP = HP
         self.atkVal = atkVal
+        
+    def __str__(self):
+        return "{}: HP={}, atkVal={}".format(self.name,self.HP,self.atkVal)
 
 class Item():
     def __init__(self, name, atk):
         self.name = name
         self.atk = atk
+        
+    def __str__(self):
+        return "{}: atkVal={}".format(self.name,self.atkVal)
 
         
 #this is for the rooms of the game
@@ -42,7 +50,15 @@ class Area():
 class Game(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
-        Game.inventory = []
+        parent.attributes("-fullscreen", True)
+        self.setupGUI()
+        Game.inventory = {}
+        Game.invOpen = False
+        Game.atkVal = 5
+        Game.HP = 50
+    
+    def __str__(self):
+        return self.name
 
     def createArea(self):
         a1 = Area("Area 1", "pics/Game1Room1.gif")
@@ -214,32 +230,52 @@ class Game(Frame):
         
         Game.currentArea = a1
 
-    def setupGUI(self):
+     def setupGUI(self):
         self.pack(fill = BOTH, expand = 1)
+        #rows and columns of Frame window
+        for row in range(2):
+            Grid.rowconfigure(self, row, weight=1)
+
+        for col in range(2):
+            Grid.columnconfigure(self, col, weight=1)
+        
+
+
+        img = None
+        Game.image = Label(self, image=img)
+        Game.image.grid(row=0, column = 0, pady = 400, sticky="nsew")
+        Game.image.pack_propagate(True)
 
         #input for now
         Game.player_input = Entry(self, bg = "white")
         Game.player_input.bind("<Return>", self.process)
-        Game.player_input.pack(side = BOTTOM, fill = X)
+        Game.player_input.grid(row=2, column=0, columnspan=2, sticky="nsew")
         Game.player_input.focus()
 
-
-        img = None
-        Game.image = Label(self, width = WIDTH, image = img)
-        Game.image.pack(side = LEFT, fill = Y)
-        Game.image.pack_propagate(False)
 
         #text for now
         text_frame = Frame(self, width = int(WIDTH/2))
         Game.text = Text(text_frame, bg = "lightgrey", state = DISABLED)
-        Game.text.pack(fill = Y, expand = 1)
-        text_frame.pack(side = RIGHT, fill = Y)
-        text_frame.pack_propagate(False)
+        Game.text.pack(fill=X,expand=1)
+        text_frame.grid(row=1, column=0, columnspan=2, sticky="nsew")
+        text_frame.pack_propagate(True)
 
-    def setAreaImage(self):
+        self.pack(fill = BOTH, expand = 1)
+
+     def setAreaImage(self):
+        Game.img = Image.open(Game.currentArea.image)
+        resized = Game.img.resize((600,500), Image.ANTIALIAS)
+##        Game.image.config(image = Game.img)
+        Game.image = ImageTk.PhotoImage(resized)
+##        Game.image.image = Game.img
+        Game.display = Label(self, image = Game.image)
+        Game.display.grid(row=0, column=0, sticky="nsw")
+
+    def setCurrentAreaImage(self):
         Game.img = PhotoImage(file = Game.currentArea.image)
         Game.image.config(image = Game.img)
         Game.image.image = Game.img
+        Game.image.grid(row=0, column=1, sticky=N+S+E+W)
 
     def setStatus(self, status):
         Game.text.config(state = NORMAL)
@@ -249,10 +285,9 @@ class Game(Frame):
             Game.text.insert(END, "You are dead. You may quit \n")
         else:
             Game.text.insert(END, str(Game.currentArea)+\
-                             "\nYou are carrying: " + str(Game.inventory)+
                              "\n\n" + status)
             Game.text.config(state = DISABLED)
-
+            
     def play(self):
         self.createArea()
         self.setupGUI()
@@ -266,7 +301,8 @@ class Game(Frame):
             return
         words = action.split()
         verb = words[0]
-        noun = words[1]
+        if(len(words) > 1):
+            noun = words[1]
 
         if(verb == "advance"):
             response = "cannot advance there (perhaps there is no area to go to)."
@@ -278,18 +314,51 @@ class Game(Frame):
         elif(verb == "loot"):
             response = "connot loot an item, for there is none"
             if(len(Game.currentArea.items) > 0):
-                Game.inventory.append(Game.currentArea.items[0])
-                response = "{} item was taken.".format(Game.currentArea.items[0])
-                Game.currentArea.items.remove[0]
+                Game.inventory.[len(Game.inventory)] = Game.currentArea.items[0]
+                response = "{} Item was taken.".format(Game.currentArea.items[0])
+                Game.currentArea.delItem(Game.currentArea.items[0])
+                
+        elif(verb == "inv"):
+            Game.invOpen = not Game.invOpen
+            response = "inventory open = {}".format(Game.invOpen)
+            Game.player_input.delete(0, END)
+            Game.display.grid_forget()
+            inv = {}
+            for key in Game.inventory:
+                inv[key] = Game.inventory[key].name 
+                
+                
+            while(Game.invOpen):
+                
+                Game.image = Label(self, text = inv, font = "25")
+                Game.image.grid(row=0, column=0, columnspan = 2, sticky="nsew")
+                Game.image.pack_propagate(False)
+                
+                self.process()
+                
+            Game.image.grid_forget()
 
         elif(verb == "attack"):
-             while(self.HP>0 and Game.currentArea.Enemy.HP>0):
-                self.HP -= Game.currentArea.Enemy.atkVal
-                Game.currentArea.Enemy.HP -= self.atkVal
-                print("Current HP: {}".format(self.HP))
+            Game.currentArea.Enemy = Game.currentArea.enemies[0]
+            Game.player_input.delete(0, END)
+            response = ""
+            while(Game.HP>0 and Game.currentArea.Enemy.HP>0):
+                
+                Game.HP -= Game.currentArea.Enemy.atkVal
+                Game.currentArea.Enemy.HP -= Game.atkVal
+                print("Current HP: {}".format(Game.HP))
                 print("{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
                 print("")
+                response += ("Current HP: {}".format(Game.HP))
+                response += ("\n{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
+                response += ("\n")
+##                Game.text_frame.grid()
+                #try recursion jacob
+                self.setStatus(response)
+                
                 sleep(1)
+            
+            response += "Your remaining health is {}".format(Game.HP)
 
 
         self.setStatus(response)
@@ -331,7 +400,7 @@ HEIGHT = 600
 WIDTH = 800
 
 window = Tk()
-window.title("Avalache's Fighters of the forum")
+window.title("Avalanche's Fighters of the Forum")
 
 g = Game(window)
 g.play()
