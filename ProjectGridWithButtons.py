@@ -1,28 +1,36 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from time import sleep
-##import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from random import randint
 
 
 #this debug value can be set true to enable debugging output
 #mainly a syntax thing for right now
-##DEBUG = False
-##
-###button and led setup
-##buttons = [18,19,20,21,17,16,13]#determine slots
-##leds = [12,6,5]#determine slots
-##
-###18 - north
-###19 - east
-###20 - south
-###21 - west
-##
-##
-###setup the GPIO
-##GPIO.setmode(GPIO.BCM)
-##GPIO.setup(buttons, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-##GPIO.setup(leds, GPIO.OUT)
+DEBUG = False
+
+
+
+#18 - north
+#19 - east
+#20 - south
+#21 - west
+
+
+#setup the GPIO
+
+
+
+
+
+
+
+
+##def OnButtonPress(window):
+##    window.event_generate("<<GpioButtonPress>>", when = "tail")
+
+
+
 
 
 class Enemy():
@@ -80,17 +88,16 @@ class Game(Frame):
         Game.invOpen = False
         Game.atkVal = 5
         Game.HP = 50
-        Game.counter = 0
         Game.strengths = 0
-
-    def __str__(self):
-        return self.name
+        
     def setHP(self, val):
         if(Game.HP + val > 50):
             Game.HP = 50
         else:
             Game.HP += val
-        
+
+    def __str__(self):
+        return self.name
 
     def createArea(self):
         a1 = Area("Area 1", "pics/Game1Room1.gif", "pics/CurrentRoom1Pic.gif")
@@ -261,6 +268,7 @@ class Game(Frame):
         a20.addEnemy(Enemy("Thanos", 500, 100))
         
         Game.currentArea = a1
+    
 
     def setupGUI(self):
         self.pack(fill = BOTH, expand = 1)
@@ -275,18 +283,110 @@ class Game(Frame):
 
         img = None
         Game.image = Label(self, image=img)
-        Game.image.grid(row=0, column = 0, pady = 400, sticky="nsew")
+        Game.image.grid(row=0, column = 0, pady = 250, sticky="nsew")
         Game.image.pack_propagate(True)
 
         #input for now
-##        Game.player_input = Entry(self, bg = "white")
-        Game.player_input = Entry(self, bg = "white")
-##        Game.player_input.delete(0, END)
-##        Game.player_input.insert(0, "advance east")
+
         
-##        if(GPIO.input(19) == True):
-##            Game.player_input = "advance east"
-        Game.player_input.bind("<Return>", self.process)
+        ##window.event_generate("<<GpioButtonPress>>")
+##        GPIO.wait_for_edge(19, GPIO.FALLING)
+        
+        ##GPIO.add_event_callback(19, lambda: OnButtonPress(window))
+##        while(True):
+##            if(GPIO.input(19) == True):
+##                Game.player_input = Entry(self, text = "advance east", bg = "white")
+##                Game.var = "advance east"
+##                break
+        
+    
+        
+
+            
+            
+##        try:
+##            Game.process(self, Game.player_input)
+##        except:
+##            pass
+##        def onButtonPress():
+##            
+##        
+##        try:
+##            GPIO.add_event_detect(19, GPIO.FALLING, callback = lambda e: onButtonPress(), bouncetime = 300)
+##        except:
+##            pass
+##        while(True):
+##            if(GPIO.input(19) == True):
+##                Game.player_input.bind("<<GpioButtonPress>>", self.process)
+##                break
+
+##        while(True):
+##            if(GPIO.input(19) == True):
+##                self.process(Game.player_input)
+##                break
+    
+        
+        Game.player_input = Entry(self, text = "advance east", bg = "white")
+        Game.player_input.delete(0, END)
+##        try:
+##            if(GPIO.event_detected(19)):
+##                Game.player_input.insert(0, "advance east")
+##                Game.player_input.bind("<<GpioButtonPress>>", self.process)
+##            elif(GPIO.event_detected(18)):
+##                res = "advance north"
+##            elif(GPIO.event_detected(20)):
+##                res = "advance south"
+##            elif(GPIO.event_detected(21)):
+##                res = "advance west"
+##            elif(GPIO.event_detected(17)):
+##                res = "inv"
+##            elif(GPIO.event_detected(16)):
+##                res = "attack"
+##            elif(GPIO.event_detected(13)):
+##                res = "loot"
+##        except:
+##            pass
+
+##        def onButtonPress(butt):
+##            window.event_generate("<<GpioButtonPress>>")
+##            print("this shows")
+##            if(butt == 19):
+##                Game.player_input.insert(0, "advance east")
+##                Game.player_input.bind("<<GpioButtonPress>>", lambda event: windowself.process)
+##                GPIO.remove_event_detect(19)
+##            elif(butt == 18):
+##                res = "advance north"
+##            elif(butt == 20):
+##                res = "advance south"
+##            elif(butt == 21):
+##                res = "advance west"
+##            elif(butt == 17):
+##                res = "inv"
+##            elif(butt == 16):
+##                res = "attack"
+##            elif(butt == 13):
+##                res = "loot"
+                
+            
+##            Game.process(Game, "<<GpioButtonPress>>", res)
+##        try:
+##            GPIO.add_event_detect(19, GPIO.BOTH, lambda e: onButtonPress(19), bouncetime = 300)
+##            GPIO.add_event_detect(18, GPIO.BOTH, lambda e: onButtonPress(18), bouncetime = 300)
+##            GPIO.add_event_detect(17, GPIO.BOTH, lambda e: onButtonPress(17), bouncetime = 300)
+##            GPIO.add_event_detect(16, GPIO.BOTH, lambda e: onButtonPress(16), bouncetime = 300)
+##            GPIO.add_event_detect(13, GPIO.BOTH, lambda e: onButtonPress(13), bouncetime = 300)
+##            GPIO.add_event_detect(20, GPIO.BOTH, lambda e: onButtonPress(20), bouncetime = 300)
+##            GPIO.add_event_detect(21, GPIO.BOTH, lambda e: onButtonPress(21), bouncetime = 300)
+##        except:
+##            pass
+##        Game.player_input.bind("<<GpioButtonPress>>", self.process)
+        
+        Game.var = "advance east"
+
+        
+        
+        
+##        Game.player_input.bind("<<GpioButtonPress>>", self.process)
         Game.player_input.grid(row=2, column=0, columnspan=2, sticky="nsew")
         Game.player_input.focus()
 
@@ -302,7 +402,7 @@ class Game(Frame):
 
     def setAreaImage(self):
         Game.img = Image.open(Game.currentArea.image)
-        resized = Game.img.resize((600,500), Image.ANTIALIAS)
+        resized = Game.img.resize((400,300), Image.ANTIALIAS)
 ##        Game.image.config(image = Game.img)
         Game.image = ImageTk.PhotoImage(resized)
 ##        Game.image.image = Game.img
@@ -310,7 +410,7 @@ class Game(Frame):
         Game.display.grid(row=0, column=0, sticky="nsw")
 
         Game.img2 = Image.open(Game.currentArea.image2)
-        resized2 = Game.img2.resize((600,500), Image.ANTIALIAS)
+        resized2 = Game.img2.resize((400,300), Image.ANTIALIAS)
 ##        Game.image.config(image = Game.img)
         Game.image2 = ImageTk.PhotoImage(resized2)
 ##        Game.image.image = Game.img
@@ -323,11 +423,6 @@ class Game(Frame):
         Game.image.image = Game.img
         Game.image.grid(row=0, column=1, sticky=N+S+E+W)
 
-        Game.img2 = PhotoImage(file = Game.currentArea.image2)
-        Game.image2.config(image = Game.img2)
-        Game.image2.image = Game.img2
-        Game.image2.grid(row=0, column=1, sticky=N+S+E+W)
-
     def setStatus(self, status):
         Game.text.config(state = NORMAL)
         Game.text.delete("1.0", END)
@@ -336,23 +431,27 @@ class Game(Frame):
             Game.text.insert(END, "You are dead. You may quit \n")
         else:
             Game.text.insert(END, str(Game.currentArea)+\
-                             "\n\n" + status +\
-                             "\nYour HP is at {}".format(Game.HP) +\
-                             "\nYour Attack value is {}".format(Game.atkVal + Game.strengths) +\
-                             "\nThere is {} enemie(s)".format(len(Game.currentArea.enemies)) +\
-                             "\nThere {} items".format(len(Game.currentArea.items)))
+                            "\n\n" + status +\
+                            "\nYour HP is at {}".format(Game.HP) +\
+                            "\nYour Attack value is {}".format(Game.atkVal + Game.strengths) +\
+                            "\nThere is {} enemy(s)".format(len(Game.currentArea.enemies)) +\
+                            "\nThere {} item(s)".format((len(Game.currentArea.items))))
             Game.text.config(state = DISABLED)
 
     def regen(self):
-        Game.setHP(self, 10)
+        self.setHP( 10)
 
     def play(self):
         self.createArea()
         self.setupGUI()
         self.setAreaImage()
 
-    def process(self, event):
-        action = Game.player_input.get()
+    def process(self, event, res):
+##        action = Game.player_input.get()
+        
+        action = res
+        print("yeet")
+        
 
         if(Game.currentArea == None):
             Game.player_input.delete(0, END)
@@ -364,14 +463,8 @@ class Game(Frame):
 
         if(verb == "advance"):
             response = "cannot advance there (perhaps there is no area to go to)."
-            
-            if(Game.invOpen):
-                if(noun == "east"):
-                    Game.counter += 1
-                if(noun == "west"):
-                    Game.counter -= 1
-                
-            elif(noun in Game.currentArea.neighbors):
+
+            if(noun in Game.currentArea.neighbors):
                 Game.regen(self)
                 Game.currentArea = Game.currentArea.neighbors[noun]
                 response = "You move to the area to the {}".format(noun)
@@ -393,32 +486,25 @@ class Game(Frame):
                         response += "\nIt was equipped"
                     Game.currentArea.delItem(Game.currentArea.items[0])
 
-                
-                
-
         elif(verb == "inv"):
-            
             Game.invOpen = not Game.invOpen
             response = "inventory open = {}".format(Game.invOpen)
             Game.player_input.delete(0, END)
             Game.display.grid_forget()
             inv = {}
             for key in Game.inventory:
-                inv[key] = Game.inventory[key].name
-
+                inv[key] = Game.inventory[key].name 
                 
                 
             while(Game.invOpen):
+                
                 Game.image = Label(self, text = inv, font = "25")
-                Game.image.grid(row=0, column=0, sticky="nsew")
+                Game.image.grid(row=0, column=0, columnspan = 2, sticky="nsew")
                 Game.image.pack_propagate(False)
                 
                 self.process()
-            
                 
             Game.image.grid_forget()
-            
-            
 
         elif(verb == "attack"):
             Game.currentArea.Enemy = Game.currentArea.enemies[0]
@@ -439,57 +525,81 @@ class Game(Frame):
                 self.setStatus(response)
                 
                 sleep(1)
-            
+            Game.currentArea.delEnemy(Game.currentArea.enemies[0])
+            Game.strengths += 2
             response += "Your remaining health is {}".format(Game.HP)
             
 
         else:
-            response = "Pick something else"
+            response = "Pick something else dumbass"
             
 
 
         self.setStatus(response)
         self.setAreaImage()
-        Game.player_input.delete(0, END)
+##        Game.player_input.delete(0, END)
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 HEIGHT = 600
 WIDTH = 800
-
 window = Tk()
 window.title("Avalache's Fighters of the forum")
-
 g = Game(window)
 g.play()
 
+
+
+#button and led setup
+buttons = [18,19,20,21,17,16,13]#determine slots
+leds = [12,6,5]#determine slots
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(buttons, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(leds, GPIO.OUT)
+
+
+
+def onButtonPress(butt):
+##    window.event_generate("<<GpioButtonPress>>", when = "tail")
+    print("this shows")
+    
+    if(butt == 19):
+##        Game.player_input.insert(0, "advance east")
+##        Game.player_input.bind("<<GpioButtonPress>>", Game.process)
+##        GPIO.remove_event_detect(19)
+        res = "advance east"
+    elif(butt == 18):
+        res = "advance north"
+    elif(butt == 20):
+        res = "advance south"
+    elif(butt == 21):
+        res = "advance west"
+    elif(butt == 17):
+        res = "inv"
+    elif(butt == 16):
+        res = "attack"
+    elif(butt == 13):
+        res = "loot"
+    
+    g.process("<<GpioButtonPress>>", res)
+##    Game.player_input.delete(0, END)
+##    Game.player_input.insert(0, "advance east")
+##    Game.player_input.bind("<<GpioButtonPress>>", Game.process(Game, "<<GpioButtonPress>>"))
+##    Game.player_input.delete(0, END)
+    
+##    Game.process(Game, "advance east")
+
+GPIO.add_event_detect(19, GPIO.BOTH, lambda e: onButtonPress(19), bouncetime = 300)
+GPIO.add_event_detect(18, GPIO.BOTH, lambda e: onButtonPress(18), bouncetime = 300)
+GPIO.add_event_detect(17, GPIO.BOTH, lambda e: onButtonPress(17), bouncetime = 300)
+GPIO.add_event_detect(16, GPIO.BOTH, lambda e: onButtonPress(16), bouncetime = 300)
+GPIO.add_event_detect(13, GPIO.BOTH, lambda e: onButtonPress(13), bouncetime = 300)
+GPIO.add_event_detect(20, GPIO.BOTH, lambda e: onButtonPress(20), bouncetime = 300)
+GPIO.add_event_detect(21, GPIO.BOTH, lambda e: onButtonPress(21), bouncetime = 300)
+##Game.player_input.bind("<<GpioButtonPress>>", Game.process)
+##Game.player_input.delete(0, END)
+
+
 window.mainloop()
+
+
