@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from time import sleep
-import RPi.GPIO as GPIO
+##import RPi.GPIO as GPIO
 from random import randint
 
 
@@ -266,7 +266,7 @@ class Game(Frame):
 
         
 
-        
+        Game.player_input = Entry(self, bg = "white")
         Game.var = "advance east"
 
         
