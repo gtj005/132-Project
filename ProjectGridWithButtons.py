@@ -9,30 +9,6 @@ from random import randint
 #mainly a syntax thing for right now
 DEBUG = False
 
-
-
-#18 - north
-#19 - east
-#20 - south
-#21 - west
-
-
-#setup the GPIO
-
-
-
-
-
-
-
-
-##def OnButtonPress(window):
-##    window.event_generate("<<GpioButtonPress>>", when = "tail")
-
-
-
-
-
 class Enemy():
     def __init__(self,name,HP,atkVal):
         self.name = name
@@ -289,104 +265,14 @@ class Game(Frame):
         #input for now
 
         
-        ##window.event_generate("<<GpioButtonPress>>")
-##        GPIO.wait_for_edge(19, GPIO.FALLING)
-        
-        ##GPIO.add_event_callback(19, lambda: OnButtonPress(window))
-##        while(True):
-##            if(GPIO.input(19) == True):
-##                Game.player_input = Entry(self, text = "advance east", bg = "white")
-##                Game.var = "advance east"
-##                break
-        
-    
-        
 
-            
-            
-##        try:
-##            Game.process(self, Game.player_input)
-##        except:
-##            pass
-##        def onButtonPress():
-##            
-##        
-##        try:
-##            GPIO.add_event_detect(19, GPIO.FALLING, callback = lambda e: onButtonPress(), bouncetime = 300)
-##        except:
-##            pass
-##        while(True):
-##            if(GPIO.input(19) == True):
-##                Game.player_input.bind("<<GpioButtonPress>>", self.process)
-##                break
-
-##        while(True):
-##            if(GPIO.input(19) == True):
-##                self.process(Game.player_input)
-##                break
-    
-        
-        Game.player_input = Entry(self, text = "advance east", bg = "white")
-        Game.player_input.delete(0, END)
-##        try:
-##            if(GPIO.event_detected(19)):
-##                Game.player_input.insert(0, "advance east")
-##                Game.player_input.bind("<<GpioButtonPress>>", self.process)
-##            elif(GPIO.event_detected(18)):
-##                res = "advance north"
-##            elif(GPIO.event_detected(20)):
-##                res = "advance south"
-##            elif(GPIO.event_detected(21)):
-##                res = "advance west"
-##            elif(GPIO.event_detected(17)):
-##                res = "inv"
-##            elif(GPIO.event_detected(16)):
-##                res = "attack"
-##            elif(GPIO.event_detected(13)):
-##                res = "loot"
-##        except:
-##            pass
-
-##        def onButtonPress(butt):
-##            window.event_generate("<<GpioButtonPress>>")
-##            print("this shows")
-##            if(butt == 19):
-##                Game.player_input.insert(0, "advance east")
-##                Game.player_input.bind("<<GpioButtonPress>>", lambda event: windowself.process)
-##                GPIO.remove_event_detect(19)
-##            elif(butt == 18):
-##                res = "advance north"
-##            elif(butt == 20):
-##                res = "advance south"
-##            elif(butt == 21):
-##                res = "advance west"
-##            elif(butt == 17):
-##                res = "inv"
-##            elif(butt == 16):
-##                res = "attack"
-##            elif(butt == 13):
-##                res = "loot"
-                
-            
-##            Game.process(Game, "<<GpioButtonPress>>", res)
-##        try:
-##            GPIO.add_event_detect(19, GPIO.BOTH, lambda e: onButtonPress(19), bouncetime = 300)
-##            GPIO.add_event_detect(18, GPIO.BOTH, lambda e: onButtonPress(18), bouncetime = 300)
-##            GPIO.add_event_detect(17, GPIO.BOTH, lambda e: onButtonPress(17), bouncetime = 300)
-##            GPIO.add_event_detect(16, GPIO.BOTH, lambda e: onButtonPress(16), bouncetime = 300)
-##            GPIO.add_event_detect(13, GPIO.BOTH, lambda e: onButtonPress(13), bouncetime = 300)
-##            GPIO.add_event_detect(20, GPIO.BOTH, lambda e: onButtonPress(20), bouncetime = 300)
-##            GPIO.add_event_detect(21, GPIO.BOTH, lambda e: onButtonPress(21), bouncetime = 300)
-##        except:
-##            pass
-##        Game.player_input.bind("<<GpioButtonPress>>", self.process)
         
         Game.var = "advance east"
 
         
         
         
-##        Game.player_input.bind("<<GpioButtonPress>>", self.process)
+
         Game.player_input.grid(row=2, column=0, columnspan=2, sticky="nsew")
         Game.player_input.focus()
 
@@ -403,17 +289,17 @@ class Game(Frame):
     def setAreaImage(self):
         Game.img = Image.open(Game.currentArea.image)
         resized = Game.img.resize((400,300), Image.ANTIALIAS)
-##        Game.image.config(image = Game.img)
+
         Game.image = ImageTk.PhotoImage(resized)
-##        Game.image.image = Game.img
+
         Game.display = Label(self, image = Game.image)
         Game.display.grid(row=0, column=0, sticky="nsw")
 
         Game.img2 = Image.open(Game.currentArea.image2)
         resized2 = Game.img2.resize((400,300), Image.ANTIALIAS)
-##        Game.image.config(image = Game.img)
+
         Game.image2 = ImageTk.PhotoImage(resized2)
-##        Game.image.image = Game.img
+
         Game.display2 = Label(self, image = Game.image2)
         Game.display2.grid(row=0, column=1, sticky="nsw")
 
@@ -447,7 +333,7 @@ class Game(Frame):
         self.setAreaImage()
 
     def process(self, event, res):
-##        action = Game.player_input.get()
+
         
         action = res
         print("yeet")
@@ -520,8 +406,7 @@ class Game(Frame):
                 response += ("Current HP: {}".format(Game.HP))
                 response += ("\n{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
                 response += ("\n")
-##                Game.text_frame.grid()
-                #try recursion jacob
+
                 self.setStatus(response)
                 
                 sleep(1)
@@ -537,7 +422,7 @@ class Game(Frame):
 
         self.setStatus(response)
         self.setAreaImage()
-##        Game.player_input.delete(0, END)
+
             
 
 
@@ -560,13 +445,10 @@ GPIO.setup(leds, GPIO.OUT)
 
 
 def onButtonPress(butt):
-##    window.event_generate("<<GpioButtonPress>>", when = "tail")
-    print("this shows")
+
     
     if(butt == 19):
-##        Game.player_input.insert(0, "advance east")
-##        Game.player_input.bind("<<GpioButtonPress>>", Game.process)
-##        GPIO.remove_event_detect(19)
+
         res = "advance east"
     elif(butt == 18):
         res = "advance north"
@@ -582,12 +464,7 @@ def onButtonPress(butt):
         res = "loot"
     
     g.process("<<GpioButtonPress>>", res)
-##    Game.player_input.delete(0, END)
-##    Game.player_input.insert(0, "advance east")
-##    Game.player_input.bind("<<GpioButtonPress>>", Game.process(Game, "<<GpioButtonPress>>"))
-##    Game.player_input.delete(0, END)
-    
-##    Game.process(Game, "advance east")
+
 
 GPIO.add_event_detect(19, GPIO.BOTH, lambda e: onButtonPress(19), bouncetime = 300)
 GPIO.add_event_detect(18, GPIO.BOTH, lambda e: onButtonPress(18), bouncetime = 300)
@@ -596,8 +473,6 @@ GPIO.add_event_detect(16, GPIO.BOTH, lambda e: onButtonPress(16), bouncetime = 3
 GPIO.add_event_detect(13, GPIO.BOTH, lambda e: onButtonPress(13), bouncetime = 300)
 GPIO.add_event_detect(20, GPIO.BOTH, lambda e: onButtonPress(20), bouncetime = 300)
 GPIO.add_event_detect(21, GPIO.BOTH, lambda e: onButtonPress(21), bouncetime = 300)
-##Game.player_input.bind("<<GpioButtonPress>>", Game.process)
-##Game.player_input.delete(0, END)
 
 
 window.mainloop()
