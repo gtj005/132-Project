@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from time import sleep
-##import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from random import randint
 
 
@@ -63,14 +63,16 @@ class Game(Frame):
         Game.inventory = {}
         Game.invOpen = False
         Game.atkVal = 5
-        Game.HP = 50
+        Game.HP = 100
         Game.strengths = 0
         
     def setHP(self, val):
-        if(Game.HP + val > 50):
-            Game.HP = 50
+        if(Game.HP + val > 100):
+            Game.HP = 100
         else:
             Game.HP += val
+    def lose():
+        exit
 
     def __str__(self):
         return self.name
@@ -107,6 +109,7 @@ class Game(Frame):
         #a2 neighbors
         a2.addNeighbor("east", a3)
         a2.addNeighbor("north", a11)
+        a2.addNeighbor("west", a1)
         #a2 items
         a2.addItem(Item("strengthPotion", 5))
         #a2 enemies
@@ -129,6 +132,7 @@ class Game(Frame):
         #a5 neighbors
         a5.addNeighbor("west", a6)
         a5.addNeighbor("east", a8)
+        a5.addNeighbor("south", a4)
         #a5 items
         a5.addItem(Item("enhancedDagger", 9))
         #a5 enemies
@@ -234,14 +238,14 @@ class Game(Frame):
         #a19 items
         a19.addItem(Item("lightningBow", 60))
         #a19 enemies
-        a19.addEnemy(Enemy("wraith", 200, 80))
+        a19.addEnemy(Enemy("wraith", 200, 30))
         
         #a20 neighbors
         a20.addNeighbor("west", a19)
         #a20 items
         a20.addItem(Item("FountainOfYouth", 300))
         #a20 enemies
-        a20.addEnemy(Enemy("Thanos", 500, 100))
+        a20.addEnemy(Enemy("Lord Gourd", 1773, 100))
         
         Game.currentArea = a1
     
@@ -265,9 +269,10 @@ class Game(Frame):
         #input for now
 
         
-
-        Game.player_input = Entry(self, bg = "white")
-        Game.var = "advance east"
+        Game.player_input = Entry(self, bg = "lightgrey")
+        
+        
+##        Game.var = "advance east"
 
         
         
@@ -336,7 +341,7 @@ class Game(Frame):
 
         
         action = res
-        print("yeet")
+        
         
 
         if(Game.currentArea == None):
@@ -356,12 +361,13 @@ class Game(Frame):
                 response = "You move to the area to the {}".format(noun)
 
         elif(verb == "loot"):
-            response = "connot loot an item, for there is none"
+            response = "cannot loot an item, for there is none"
             if(len(Game.currentArea.items) > 0):
                 Game.regen(self)
                 if(Game.currentArea.items[0].name == "strengthPotion"):
                     Game.strengths += Game.currentArea.items[0].atk
                     response = "You drank the strength pot"
+                    Game.currentArea.delItem(Game.currentArea.items[0])
                 else:
                 
                     Game.inventory[len(Game.inventory)] = Game.currentArea.items[0]
@@ -370,6 +376,9 @@ class Game(Frame):
                     if(Game.currentArea.items[0].atk > Game.atkVal):
                         Game.atkVal = Game.currentArea.items[0].atk
                         response += "\nIt was equipped"
+                    GPIO.output(leds[2], True)
+                    sleep(0.5)
+                    GPIO.output(leds[2], False)
                     Game.currentArea.delItem(Game.currentArea.items[0])
 
         elif(verb == "inv"):
@@ -383,40 +392,55 @@ class Game(Frame):
                 
                 
             while(Game.invOpen):
-                
+                GPIO.output(leds[0], True)
                 Game.image = Label(self, text = inv, font = "25")
                 Game.image.grid(row=0, column=0, columnspan = 2, sticky="nsew")
                 Game.image.pack_propagate(False)
                 
                 self.process()
+            GPIO.output(leds[0], False)
                 
             Game.image.grid_forget()
 
         elif(verb == "attack"):
+            
             Game.currentArea.Enemy = Game.currentArea.enemies[0]
             Game.player_input.delete(0, END)
-            response = ""
+##            response = ""
             while(Game.HP>0 and Game.currentArea.Enemy.HP>0):
-                
+                GPIO.output(leds[1], True)
                 Game.HP -= Game.currentArea.Enemy.atkVal
                 Game.currentArea.Enemy.HP -= (Game.atkVal + Game.strengths)
                 print("Current HP: {}".format(Game.HP))
                 print("{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
                 print("")
-                response += ("Current HP: {}".format(Game.HP))
-                response += ("\n{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
-                response += ("\n")
+                if(Game.HP <= 0):
+                    response = "You have died"
+                    self.setStatus(response)
+                    sleep(2)
+                    GPIO.cleanup()
+                    sys.exit(0)
+                    
+                    break
+                    
+                else:
+                    response = ("Current HP: {}".format(Game.HP))
+                    response += ("\n{}'s current HP: {}".format(Game.currentArea.Enemy.name,Game.currentArea.Enemy.HP))
+                    response += ("\n")
+                    
 
                 self.setStatus(response)
                 
+                
                 sleep(1)
+            
             Game.currentArea.delEnemy(Game.currentArea.enemies[0])
             Game.strengths += 2
             response += "Your remaining health is {}".format(Game.HP)
-            
+            GPIO.output(leds[1], False)
 
         else:
-            response = "Pick something else dumbass"
+            response = "Pick something else"
             
 
 
@@ -441,6 +465,7 @@ leds = [12,6,5]#determine slots
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(buttons, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(leds, GPIO.OUT)
+GPIO.output(leds, False)
 
 
 
@@ -448,7 +473,6 @@ def onButtonPress(butt):
 
     
     if(butt == 19):
-
         res = "advance east"
     elif(butt == 18):
         res = "advance north"
